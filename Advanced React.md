@@ -136,4 +136,19 @@ This method is executed once the re-rendering of the component is completed. Thi
 This method is executed when the child component props are dependent upon the parent and changes during the re render of the parent component causes the udpdate of the child component
 For ex.
 ```javascript
+class MyComponent extends React.Component {
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.name && this.props.name !== nextProps.name)
+            return true
+        return false;
+    }
+    
+    render() {
+        return (
+            <div>
+                <span>{this.props.name}</span>
+            </div>
+        )
+    }
+}
 ```
