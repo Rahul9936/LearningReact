@@ -152,3 +152,272 @@ class MyComponent extends React.Component {
     }
 }
 ```
+
+### Flux and Redux
+Here we will mostly discuss about the Redux functionality because 
+1) Redux can be integrated React, Angular or any other framework
+2) Servicenow seismic framework extensively utilizes the Redux
+ 
+
+## Redux
+As we know, component state can be used to change the UI dynamically on performing some actions, this state handling can be done in the component itself but it becomes hard to maintain the states for a larger size project, this is where Redux comes to picture to rescue from this kind of situations
+
+#### when to use redux
+As we have learnt that we can dynamically update the UI in react using component state, by calling this.setState of a component will automatically the component and it child components as well.
+
+Now a days applications are becoming more dynamic in nature especially in Single Page Application, and if the number of pages more than 2-3 then managing the component by changing the state becomes very complex. It becomes hard to tell which module has changed the state and unwanted data changes may be there. It also helps in restructuring the application.
+
+for e.g. Incidents list can be one component and Incident form can be another component so to provide the interaction between either we move both the components under the same parent element and pass states as props or use Redux which maintains the application state not the component state.
+
+Facebook developers came up with the solution called <strong>Flux</strong>.
+Its a one directional data flow architecture to manage the application state. Check the below how state management is done using flux
+
+<img src="https://i.stack.imgur.com/bK7nC.png"/>
+<br></br>
+
+Redux is also similar to the Flux, data flow in unidirectional but it uses a single store, check the below image to understand the state management in React using Redux
+
+<img src="https://cdn-images-1.medium.com/max/1600/0*95tBOgxEPQAVq9YO.png" />
+
+Integrating redux with the react has two parts, first one is how to configure redux(Action, reducer, store) and second one is connecting redux with the react (binding store with the components props and actions). 
+We will start with the first part, it includes the following concepts:
+- Actions
+- Reducer
+- Store
+
+### Action
+Actions are simply the Javascript object that send data to the store
+- Actions must have the type attributes
+- Any number of attributes can be specified for an Action
+- As a best practive action names should be defined as a constant because typing the actions names are more prone to errors 
+```javascript
+{
+    type: "ITEM_SELECTED",
+    sys_id: "3434355vfgf43343dvvf434",
+    incident_number: "INC100023"
+}
+```
+
+#### Action Creator
+Its best practice to wrap every action within a method called Action creators, e.g.
+```javascript
+function addToDo() {
+    return {
+        type: "ITEM_SELECTED",
+        sys_id: "3434355vfgf43343dvvf434",
+        incident_number: "INC100023"
+    }
+}
+```
+### TODO: read about async action creator
+
+### Reducers
+When the user performs any operation on the UI, action gets created now its reducers job to determine the next state of the application.
+Reducers are Pure methods, it takes current state and action name as argument and return the next state of the application.
+Following things should not be done in reducers:
+- Change the current state or action object directly, always create a copy of state and then perform any operation on it
+- Do not call non-pure functions like Date.now()
+
+```javascript
+(state = initialState, action) => {
+    switch(action.type){
+        // update state based on action type
+    }
+    return nextStep;
+}
+```
+
+#### Methods to use in reducers to avoid mutability of state and action object
+Arrays: concat, slice and use spread operator
+Objects: Object.assign and spread operator
+
+### Store
+Store acts as glue in Redux, store holds the whole state tree of the application keeps an updated version of the states. Store can be updated by dispatching an action.
+Following is an example of dispatching the action and updating it
+
+```javascript
+import { createStore } from 'redux';
+
+function addItemReducer(state, action) {
+    switch(action.type){
+        case 'ADD_ITEM':
+            return {...state, payload: action.payload};
+        default:
+            return state;
+    }
+}
+
+var store = new createStore(addItemReducer);
+
+store.dispatch({
+    type: "ADD_ITEM",
+    payload: "Any Random Text"
+});
+```
+
+#### Provider
+
+Now coming to the second part, where we discuss how to link redux with the react. react-redux provide a component called 'Provider' which provides the store object to all of child components so ideally Provider should be the root component of our App as only chilren under provider have the access of Store object, below example is given for the todo app
+
+```javascript
+class MyApp extends Component {
+    render() {
+        return (
+            <Provider store = {store}>
+                <input type="text" name="inputbox" />
+                <input type="submit" name="submitToDo"/>
+                <TodoList />
+            </Provider>
+        )
+    }
+}
+```
+
+### Connect
+After adding the Provider component we have access to store is available but but there is no direct link between the store and component that is when the component changes how the component is going to update.
+Connect provide the mechanism to map the store's state and dispatch with the component props, in other words React view is connected to Redux state through the connect function provided by react-redux library
+
+connect requires mapStateToProps and mapDispatchToProps and binds state and Actions to the component props
+
+```javascript
+const mapStateToProps = (state) => {
+    return {
+        prop1: state.items
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onClickHandler: (payload) => {dispatch(addItem(payload))}
+    }
+}
+
+connect(mapStateToProps, mapDispatchToProps)(MyApp);
+```
+#### Note: As you check in the above example, both the methods returns object which will mapped with component props
+
+
+## Let's connect the dots ...
+If you have understood the data flow in redux, means how the action dispatches which cause the store to update the state and this state will be re-rendered with latest changes
+
+I will be creating a Simple Todo app which has input box and submit button and below that we will have the list of todos and when we submit the input list will be updated automatically
+
+Let's begin
+```javascript
+// Actions.js - This file will have all the action constants
+export const ADD_ITEM = "ADD_ITEM";
+
+// ActionCreator.js - This file will have all the actions which returns an action Object comprising of type and and <payloads> attributes
+import {ADD_ITEM} from './Actions';
+
+export function addItem(data) {
+    return {
+        type: ADD_ITEM,
+        payload: data
+    };
+}
+
+// Reducers.js - This file will help in producing the next state, and also makes redux predictable
+import {ADD_ITEM} from './Actions'; 
+
+export function addItemReducer (state = [], action) {
+    console.log(action);
+    switch(action.type) {
+        case ADD_ITEM:
+            return [...state, action.payload];
+        break;
+        default:
+            state;
+    }
+}
+
+// ListComponent.js - After submitting the input field, list will be re rendered based on the props (articles) passed to this component
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+export default class ListComponent extends React.Component {
+    render() {
+        return (
+            <div>
+                {
+                    this.props.articles.map((value, index) => {
+                        return <div key={index}>{value}</div>
+                    })
+                }
+            </div>
+        )
+    }
+}
+
+// MyApp.js - This one is main Component, here we write logic to map the store state with component props
+import React from 'react';
+import { addItem } from './ActionCreator';
+import { connect } from 'react-redux';
+import ListComponent from './ListComponent';
+import { bindActionCreators } from 'redux';
+
+class MyApp extends React.Component {
+	constructor(props) {
+		super(props);
+		this.handleSubmitClick = this.handleSubmitClick.bind(this);
+	}
+
+	handleSubmitClick(event) {
+		this.props.handleTheSubmitClick(document.getElementsByName("title")[0].value);
+	}
+
+	render() {
+		console.log(this.props);
+		return (
+            <div>
+                <input type="text" name="title"/>
+                <button onClick={this.handleSubmitClick}>Submit</button>
+                <ListComponent articles={this.props.articles || []}/>
+            </div>
+		)
+	}
+}
+
+const mapStateToProps = (state) => {
+	console.log(state);
+	return {
+		articles: state
+	}
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		handleTheSubmitClick : (data) => { dispatch(addItem(data)) }
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyApp);
+
+// index.js - Entry file for the react-redux app, we will wrap the parent compoent of the app within Provider which provides store object to all the child components
+import ReactDOM from 'react-dom';
+import React from 'react';
+import { addItemReducer } from './Reducers';
+import { addItem } from './ActionCreator';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import MyApp from './MyApp';
+
+let store = new createStore(addItemReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+class MainComponent extends React.Component {
+
+	render() {
+		return (
+			<Provider store = {store}>
+				<MyApp />
+			</Provider>
+		)
+	}
+}
+
+var el = document.getElementById("app");
+ReactDOM.render(<MainComponent />, el);
+```
+
+
+# ========== Happy Coding ===================
