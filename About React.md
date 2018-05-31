@@ -1,7 +1,7 @@
 ## About React
 React is an open source Javascript library from facebook for building User Interfaces (UIs). React powers the UI of Instagrams web client and Facebook's Ad management products. There are multiple benefits , ranging from nice templates with JSX, to a fist, virtual DOM.
 
-Often people talk about how react is different than other frrameworks like AnuglarJS, so next we will emphasize more on Good and Bad parts of React JS
+Often people talk about how react is different than other frameworks like AnuglarJS, so next we will emphasize more on Good and Bad parts of React JS
 
 ### Advantages of using the React
 - Component based architecture: In React an UI page can be broken into multiple pieces which are called components. For ex our Incident form can be categorised into multiple components Header, Form, Buttons, etc. These components are completely reusable. We will discuss more about the components moving further
@@ -58,7 +58,7 @@ Note: This method has been deprecated, latest version of react does not support 
 
 - Method #3: Using Javascript Classes
 ```javascript
-<class MyComponent extends React.Component {
+class MyComponent extends React.Component {
     render() {
         return /*write your jsx code here*/
     }
