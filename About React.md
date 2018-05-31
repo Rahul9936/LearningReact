@@ -4,7 +4,7 @@ React is an open source Javascript library from facebook for building User Inter
 Often people talk about how react is different than other frameworks like AnuglarJS, so next we will emphasize more on Good and Bad parts of React JS
 
 ### Advantages of using the React
-- Component based architecture: In React an UI page can be broken into multiple pieces which are called components. For ex our Incident form can be categorised into multiple components Header, Form, Buttons, etc. These components are completely reusable. We will discuss more about the components moving further
+- Component based architecture: In React an UI page can be broken into multiple pieces which are called components. For ex our Incident form can be categorised into multiple components Header, Form, Buttons, etc. These components are completely reusable. We will discuss more about the components.
 - Fast DOM manipulation: As we know direct DOM manipulation is very costly (Time wise) but react utilizes the concept of Virtual DOM.
 
 ##### Note: React is mainly the view layer, one cannot build a fully functional dynamic application with React alone
@@ -68,11 +68,11 @@ class MyComponent extends React.Component {
 ##### Components extending React.Component have some advantage over the functional components because functional components are stateless while class components are stateful component.
 
 #### Stateful vs Stateless Components
-A stateless component does not maintain the state of the state so basically stateless components are static component it changes only when the parent component (Stateful) changes. For ex on FB page Login/Logout text can be stateless component because it does not change until the application state does not change.
+A stateless component does not maintain the state of the state. So, basically stateless components are static component. It changes only when the parent component (Stateful) changes. For example, on FB page Login/Logout text can be stateless component because it does not change until the application state does not change.
 
 ## Attaching the components
-So in the above section we have learnt how to create the component now lets attach the above component with browser DOM.
-ReactDOM, ReactDOM is used to render the react component on the web page, check the below code
+In the above section we have learnt how to create the component now lets attach the above component with browser DOM,
+ReactDOM. ReactDOM is used to render the react component on the web page, check the below code
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
