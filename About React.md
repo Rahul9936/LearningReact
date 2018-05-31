@@ -116,8 +116,8 @@ Steps to remember:
 ### Explanation of the above code
 
 #### Export and Import modules in ES6
-"Export" Statement used to make a piece of code of a module visible and reusable to other modules
-"Import" statement used to import a module in ES6, importing modules has not existed before ES6 but was possible by using libraries like CommonJS. CommonJS uses require() syntax and NodeJS utilises extensively this feature.
+"Export" Statement is used to make a piece of code of a module visible and reusable to other modules.
+"Import" statement is used to import a module in ES6, Importing modules has not existed before ES6 but it was possible by using libraries like CommonJS. CommonJS uses require() syntax and NodeJS utilises extensively this feature.
 In our case, we are using Babel to transpile the ES6 code to ES5, so babel transpiles import ... from statement to require() statement which is used by webpack to bundle into a single file.
 A module can import things from other modules , it refer to those modules via module specifiers as string in form of:
 
