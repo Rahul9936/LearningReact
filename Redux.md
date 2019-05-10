@@ -47,7 +47,48 @@ Use Object.assign() for objects and Array.prototype.concat for array to make the
 #### Store
 Store in the javscript object which holds the state of the entire application
 <b>Note: </b> An application have only store but multiple reducers
-Lets combine all of the above concepts into one to configure the redux for the application, I will be creating multiple files to make it clearConstants.js
+
+Lets combine all of the above concepts into one to configure the redux for the application, I will be creating multiple files to make it clear
+
+<b>Constants.js</b>
 ```javascript
-  
+export const ADD_ITEM = "add_item";  
 ```
+
+<b>Actions.js</b>
+```javascript>
+import {ADD_ITEM} from "./Actions.js";
+
+export addItem function (item) {
+  return {
+    type: ADD_ITEM,
+    payload: item
+  }
+}
+```
+
+<b>Reducer.js</b>
+```javascript
+import {ADD_ITEM} from "./Actions.js";
+
+var initialState = [];
+
+export default reducers = function (state = initialState, action) {
+  switch(action.type) {
+    case ADD_ITEM:
+      return state.concat(action.payload);
+    // Similarly add case for other reducers, In this application we have only one action add item from input box to the list
+  }
+}
+```
+
+<Store.js>
+```javascript
+import reducer from "./Reducer.js";
+import { createStore } from "redux";
+
+var store = createStore(reducer);
+export default store;
+```
+
+Till now we have configured the Redux for our application, but to access the store in our application component we will use "react-redux" library to glue them together
