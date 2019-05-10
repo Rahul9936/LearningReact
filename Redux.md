@@ -152,6 +152,7 @@ syntax - <b>connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [opti
 Here I have created one more component ListComponent, so when we type anything in the input box and hit enter, that text item will be updated in the list of ListComponent.
 
 So lets hit it ...
+
 <b>ListComponent.js</b>
 ```javascript
 import React from "react";
@@ -172,10 +173,12 @@ class ListComponent extends React.Component {
 function mapPropsToState(state) {
   console.log(state);
   return {
-    names: state
+    items: state
   };
 }
 // export default ListComponent; - By doing this we are exporting the dumb component here which does not have any idea about the store data
 // Make the component aware of the store data
 export default connect(mapPropsToState)(ListComponent);
 ```
+
+TODO: Explain about the Presentational component and Container Component
