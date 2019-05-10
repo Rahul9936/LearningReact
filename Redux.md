@@ -92,3 +92,61 @@ export default store;
 ```
 
 Till now we have configured the Redux for our application, but to access the store in our application component we will use "react-redux" library to glue them together
+
+#### react-redux
+It lets the React components to connect with the Redux. react-redux provides "Provider" component which lets the application access the redux store. Provider component should be used at the highest level of the application so that store object is available to all the child components. For ex.
+Before binding with Provider application looks like this - 
+```html
+<App> // Root component of the application
+  <Define all the child components here>
+</App>
+```
+
+After binding with the provider -
+```html
+<Provider store={store}>
+  <App> // Root component of the application
+    <Define all the child components here>
+  </App>
+</Provider>
+```
+- Provide takes store as props, all the components present under the Provider will have the access to this store object
+
+Lets create a component and add the Provider there to see it in action
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { addItem } from "./actions.js";
+import store from "./store.js";
+
+class App extends React.Component {
+  // Add event handler here which dispatch action to store on clicking the enter key on input box, and it will update the state in the reducer function
+  // Here it may be confusing that how the reducer function is being called by executing store.dispatch, to answe this check Store.js there while creating the store we are passing the reducer function -> (Line no 90)
+  handleChange(event) {
+    if (event.key === "Enter") {
+      store.dispatch(addItem(event.target.value));
+      console.log(store);
+    }
+  }
+    
+  render() {
+    return (
+      <Provider store={store}>
+        <input name="todobox" type="text" onKeyDown={this.handleChange.bind(this)} />
+        <ListComponent /> // Don't bother about it now, explained in next example
+      </Provider>
+    );
+  }
+}
+```
+
+In the above example how to dispatch an event from a React component and update the state, now in next example we will fetch the state from store and update the view of the component. Here I have created one more component ListComponent, so when we type anything in the input box and hit enter, that text item will be updated in the list of ListComponent.
+To connect the redux store with the component props, we have to use "connect" api provided by react-redux
+So lets hit it ...
+
+<b>ListComponent.js</b>
+```javascript
+import React from "react";
+import { connect } from "react-redux"; // Explained after the 
+```
