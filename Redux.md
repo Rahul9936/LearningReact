@@ -141,12 +141,41 @@ class App extends React.Component {
 }
 ```
 
-In the above example how to dispatch an event from a React component and update the state, now in next example we will fetch the state from store and update the view of the component. Here I have created one more component ListComponent, so when we type anything in the input box and hit enter, that text item will be updated in the list of ListComponent.
-To connect the redux store with the component props, we have to use "connect" api provided by react-redux
-So lets hit it ...
+In the above example how to dispatch an event from a React component and update the state.
+Now in next example we will fetch the state from store and update the view of the component. 
 
+To connect the redux store with the component props, we have to use <b>connect</b> api provided by react-redux
+#### connect
+connect api maps the store state to the component props, check in the below example we have used mapStateToProps function which maps state to props (items).
+syntax - <b>connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [options])</b>
+
+Here I have created one more component ListComponent, so when we type anything in the input box and hit enter, that text item will be updated in the list of ListComponent.
+
+So lets hit it ...
 <b>ListComponent.js</b>
 ```javascript
 import React from "react";
-import { connect } from "react-redux"; // Explained after the 
+import { connect } from "react-redux";
+
+class ListComponent extends React.Component {
+  render() {
+    return (
+      <ul>
+        {this.props.items.map(function(name, index) {
+          return <li key={index}>{name}</li>;
+        })}
+      </ul>
+    );
+  }
+}
+
+function mapPropsToState(state) {
+  console.log(state);
+  return {
+    names: state
+  };
+}
+// export default ListComponent; - By doing this we are exporting the dumb component here which does not have any idea about the store data
+// Make the component aware of the store data
+export default connect(mapPropsToState)(ListComponent);
 ```
